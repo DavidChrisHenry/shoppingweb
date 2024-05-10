@@ -8,7 +8,7 @@ export class User {
   @Prop()
   password: string;
 
-  @Prop({ default: 'admin' }) // Đặt mặc định cho role là "user"
+  @Prop({ default: 'user' }) // Đặt mặc định cho role là "user"
   role: string;
 
   @Prop({ default: Date.now })
