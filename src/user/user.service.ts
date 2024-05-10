@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './schemas/user.schema';
-import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class UserService {
@@ -13,7 +12,9 @@ export class UserService {
     return await addUser.save();
   }
 
-  async findUser(filters: Record<string, any>): Promise<User[]> {
-    return await this.UserModel.find(filters).exec();
+  async findUser(username: string): Promise<User | undefined> {
+    // Sử dụng đối tượng truy vấn thay vì hàm bậc cao
+    const user = await this.UserModel.findOne({ username }); // Tìm một người dùng với username cụ thể
+    return user;
   }
 }

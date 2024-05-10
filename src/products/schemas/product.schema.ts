@@ -9,7 +9,7 @@ export class Product {
   country: string;
 
   @Prop()
-  Quantity: string;
+  Quantity: number;
 
   @Prop()
   ProductId: string;

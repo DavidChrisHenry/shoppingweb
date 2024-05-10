@@ -11,7 +11,7 @@ import { AuthModule } from './auth/auth.module';
 @Module({
   imports: [
     MongooseModule.forRoot(
-      'mongodb+srv://lotus_training:6buBGnDENCX2MxsR@trainning.pldpgrz.mongodb.net/',
+      'mongodb+srv://BSLapJIPgnU3ReR4:BSLapJIPgnU3ReR4@atlascluster.vjgfnz8.mongodb.net/',
       {
         dbName: 'shopping_website',
       },

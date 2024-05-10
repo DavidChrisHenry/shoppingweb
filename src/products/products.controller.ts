@@ -8,14 +8,17 @@ import {
   Param,
   Query,
   BadRequestException,
+  UseGuards,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { Product } from './schemas/product.schema';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Get() // Endpoint cho lọc
   async findProducts(
     @Query('minPrice') minPrice?: number,
@@ -65,16 +68,19 @@ export class ProductsController {
     return this.productsService.findProducts(filters);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<Product> {
     return await this.productsService.findOne(id);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post()
   async create(@Body() product: Product): Promise<Product> {
     return await this.productsService.create(product);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Put(':id')
   async update(
     @Param('id') id: string,
@@ -83,6 +89,7 @@ export class ProductsController {
     return await this.productsService.update(id, product);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   async delete(@Param('id') id: string): Promise<Product> {
     return await this.productsService.delete(id);

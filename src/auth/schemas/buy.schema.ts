@@ -6,13 +6,10 @@ export class User {
   username: string;
 
   @Prop()
-  password: string;
-
-  @Prop({ default: 'admin' }) // Đặt mặc định cho role là "user"
-  role: string;
+  ProductId: string;
 
   @Prop({ default: Date.now })
-  createdAt: Date;
+  time: Date;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
