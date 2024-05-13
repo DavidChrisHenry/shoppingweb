@@ -39,4 +39,7 @@ export class AuthService {
     const newPost = new this.BuyProductModel(buyProduct);
     return await newPost.save();
   }
+  async logout(token: string, res: any) {
+    res.clearCookie(token);
+  }
 }

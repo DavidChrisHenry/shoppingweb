@@ -20,6 +20,13 @@ export class AuthController {
     return await this.authService.login(req.user);
   }
 
+  @Post('logout')
+  @UseGuards(LocalAuthGuard)
+  async logout(@Headers('Authorization') token: string, res: any) {
+    console.log(token);
+    return await this.authService.logout(token, res);
+  }
+
   @Post('buy-products')
   @UseGuards(JwtAuthGuard)
   async handleBuyProduct(
