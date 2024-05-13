@@ -13,13 +13,14 @@ import {
 import { ProductsService } from './products.service';
 import { Product } from './schemas/product.schema';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { AdminGuard } from 'src/auth/admin.guard';
 
 @Controller('products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
-  @UseGuards(JwtAuthGuard)
   @Get() // Endpoint cho lọc
+  @UseGuards(JwtAuthGuard)
   async findProducts(
     @Query('minPrice') minPrice?: number,
     @Query('maxPrice') maxPrice?: number,
@@ -68,20 +69,20 @@ export class ProductsController {
     return this.productsService.findProducts(filters);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get(':id')
+  @UseGuards(JwtAuthGuard)
   async findOne(@Param('id') id: string): Promise<Product> {
     return await this.productsService.findOne(id);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Post()
+  @UseGuards(JwtAuthGuard, AdminGuard)
   async create(@Body() product: Product): Promise<Product> {
     return await this.productsService.create(product);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Put(':id')
+  @UseGuards(JwtAuthGuard, AdminGuard)
   async update(
     @Param('id') id: string,
     @Body() product: Product,
@@ -89,8 +90,8 @@ export class ProductsController {
     return await this.productsService.update(id, product);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Delete(':id')
+  @UseGuards(JwtAuthGuard, AdminGuard)
   async delete(@Param('id') id: string): Promise<Product> {
     return await this.productsService.delete(id);
   }

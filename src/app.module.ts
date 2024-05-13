@@ -4,10 +4,9 @@ import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ProductsModule } from './products/products.module';
 import { QueryValidationMiddleware } from './middlewares/query-validation.middleware';
-
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
-
+import { JwtService } from '@nestjs/jwt';
 @Module({
   imports: [
     MongooseModule.forRoot(
@@ -21,7 +20,7 @@ import { AuthModule } from './auth/auth.module';
     AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, JwtService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

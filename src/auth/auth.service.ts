@@ -1,10 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { BuyProduct } from './schemas/buyproducts.schema';
 
 @Injectable()
 export class AuthService {
   constructor(
+    @InjectModel('BuyProduct')
+    private readonly BuyProductModel: Model<BuyProduct>,
     private usersService: UserService,
     private jwtService: JwtService,
   ) {}
@@ -24,9 +29,14 @@ export class AuthService {
       sub: user.userId,
       role: user.role,
     };
-    console.log(this.jwtService.sign(payload));
     return {
       access_token: this.jwtService.sign(payload),
     };
+  }
+  async handleBuyProduct(token: string, buyProduct: BuyProduct) {
+    const decodedToken = this.jwtService.verify(token);
+    buyProduct.username = decodedToken.username;
+    const newPost = new this.BuyProductModel(buyProduct);
+    return await newPost.save();
   }
 }
