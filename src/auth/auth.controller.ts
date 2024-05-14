@@ -5,6 +5,7 @@ import {
   Post,
   Request,
   UseGuards,
+  Session,
 } from '@nestjs/common';
 import { LocalAuthGuard } from './local-auth.guard';
 import { AuthService } from './auth.service';
@@ -17,14 +18,7 @@ export class AuthController {
   @Post('login')
   @UseGuards(LocalAuthGuard)
   async login(@Request() req) {
-    return await this.authService.login(req.user);
-  }
-
-  @Post('logout')
-  @UseGuards(LocalAuthGuard)
-  async logout(@Headers('Authorization') token: string, res: any) {
-    console.log(token);
-    return await this.authService.logout(token, res);
+    return await this.authService.login(req.user, req);
   }
 
   @Post('buy-products')
