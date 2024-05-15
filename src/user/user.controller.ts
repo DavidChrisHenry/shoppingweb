@@ -17,13 +17,6 @@ export class UserController {
   @Post('register')
   @UsePipes(new ValidationPipe())
   async register(@Body() user: User) {
-    // Đảm bảo rằng bạn đang sử dụng @Body() để lấy dữ liệu
-    const existingUser = await this.userService.findUser(user.username);
-
-    if (!existingUser) {
-      return await this.userService.create(user);
-    } else {
-      throw new HttpException('Người dùng đã tồn tại!', HttpStatus.CONFLICT);
-    }
+    return await this.userService.checkExistingUser(user);
   }
 }
