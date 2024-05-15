@@ -14,6 +14,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
+  //kiểm tra user có tồn tại hay không
   async validateUser(username: string, pass: string): Promise<any> {
     const user = await this.usersService.findUser(username);
     if (user && user.password === pass) {
@@ -23,7 +24,6 @@ export class AuthService {
     return null;
   }
 
-  // AuthService
   async login(user: any, req: any) {
     const payload = {
       username: user.username,
@@ -31,18 +31,18 @@ export class AuthService {
       role: user.role,
     };
     const accessToken = this.jwtService.sign(payload);
-    req.session.access_token = accessToken; // Lưu token vào session
+    // req.session.userRole = user.role; // Lưu token vào session
     return {
       access_token: accessToken,
     };
   }
 
-  // AuthService
   async logout(req: any) {
-    delete req.session.access_token; // Xóa token khỏi session
+    // delete req.session.access_token; // Xóa token khỏi session
     return { message: 'Logged out successfully' };
   }
 
+  // xử lý mua hàng sau khi đăng nhập
   async handleBuyProduct(token: string, buyProduct: BuyProduct) {
     const decodedToken = this.jwtService.verify(token);
     buyProduct.username = decodedToken.username;

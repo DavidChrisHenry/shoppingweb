@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import * as session from 'express-session';
+// import * as session from 'express-session';
 import * as express from 'express';
 const dotenv = require('dotenv');
 dotenv.config();
@@ -10,13 +10,13 @@ async function bootstrap() {
   const port = process.env.PORT;
   const app = await NestFactory.create(AppModule);
   app.use(express.json());
-  app.use(
-    session({
-      secret: process.env.session_key,
-      resave: false,
-      saveUninitialized: false,
-    }),
-  );
+  // app.use(
+  //   session({
+  //     secret: process.env.session_key,
+  //     resave: false,
+  //     saveUninitialized: false,
+  //   }),
+  // );
 
   await app.listen(port);
 
