@@ -4,7 +4,9 @@ import {
   Body,
   HttpException,
   HttpStatus,
+  UsePipes,
 } from '@nestjs/common';
+import { ValidationPipe } from './validation.pipe';
 
 import { UserService } from './user.service';
 import { User } from './schemas/user.schema';
@@ -13,6 +15,7 @@ import { User } from './schemas/user.schema';
 export class UserController {
   constructor(private userService: UserService) {}
   @Post('register')
+  @UsePipes(new ValidationPipe())
   async register(@Body() user: User) {
     // Đảm bảo rằng bạn đang sử dụng @Body() để lấy dữ liệu
     const existingUser = await this.userService.findUser(user.username);
@@ -20,7 +23,7 @@ export class UserController {
     if (!existingUser) {
       return await this.userService.create(user);
     } else {
-      return new HttpException('Người dùng đã tồn tại!', HttpStatus.CONFLICT);
+      throw new HttpException('Người dùng đã tồn tại!', HttpStatus.CONFLICT);
     }
   }
 }

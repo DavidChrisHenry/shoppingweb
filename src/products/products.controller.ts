@@ -9,11 +9,13 @@ import {
   Query,
   BadRequestException,
   UseGuards,
+  UsePipes,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { Product } from './schemas/product.schema';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { AdminGuard } from 'src/auth/admin.guard';
+import { ValidationProductPipe } from './validation-product.pipe';
 
 @Controller('products')
 export class ProductsController {
@@ -76,6 +78,7 @@ export class ProductsController {
   }
 
   @Post()
+  @UsePipes(ValidationProductPipe)
   @UseGuards(JwtAuthGuard, AdminGuard)
   async create(@Body() product: Product): Promise<Product> {
     return await this.productsService.create(product);

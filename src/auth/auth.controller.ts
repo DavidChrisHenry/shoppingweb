@@ -5,11 +5,13 @@ import {
   Post,
   Request,
   UseGuards,
+  UsePipes,
 } from '@nestjs/common';
 import { LocalAuthGuard } from './local-auth.guard';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { BuyProduct } from './schemas/buyproducts.schema';
+import { ValidationBuyProductPipe } from './validation-buyproduct.pipe';
 
 @Controller('auth')
 export class AuthController {
@@ -28,6 +30,7 @@ export class AuthController {
 
   @Post('buy-products')
   @UseGuards(JwtAuthGuard)
+  @UsePipes(ValidationBuyProductPipe)
   async handleBuyProduct(
     @Body() buyProduct: BuyProduct,
     @Headers('Authorization') authorizationHeader: string,
