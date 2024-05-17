@@ -7,7 +7,6 @@ import {
   Body,
   Param,
   Query,
-  BadRequestException,
   UseGuards,
   UsePipes,
 } from '@nestjs/common';
@@ -21,7 +20,7 @@ import { ValidationProductPipe } from './validation-product.pipe';
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
-  @Get() // Endpoint cho lọc
+  @Get()
   @UseGuards(JwtAuthGuard)
   async findProducts(
     @Query('minPrice') minPrice?: number,
@@ -31,43 +30,14 @@ export class ProductsController {
     @Query('ProductId') ProductId?: string,
     @Query('name') name?: string,
   ): Promise<Product[]> {
-    const filters: Record<string, any> = {};
-
-    // Kiểm tra minPrice và đảm bảo nó là số hợp lệ
-    if (minPrice !== undefined) {
-      const parsedMinPrice = minPrice;
-      if (isNaN(parsedMinPrice)) {
-        throw new BadRequestException('Invalid minPrice'); // Nếu không hợp lệ, trả về lỗi 400
-      }
-      filters.Price = { ...filters.Price, $gte: parsedMinPrice };
-    }
-
-    // Kiểm tra maxPrice và đảm bảo nó là số hợp lệ
-    if (maxPrice !== undefined) {
-      const parsedMaxPrice = maxPrice;
-      if (isNaN(parsedMaxPrice)) {
-        throw new BadRequestException('Invalid maxPrice');
-      }
-      filters.Price = { ...filters.Price, $lte: parsedMaxPrice };
-    }
-
-    // Xử lý tham số country nếu có
-    if (country) {
-      filters.country = country;
-    }
-
-    if (ProductId) {
-      filters.ProductId = ProductId;
-    }
-
-    if (Price) {
-      filters.Price = Price;
-    }
-
-    if (name) {
-      filters.name = name;
-    }
-
+    const filters = {
+      minPrice,
+      maxPrice,
+      country,
+      Price,
+      ProductId,
+      name,
+    };
     return this.productsService.findProducts(filters);
   }
 
