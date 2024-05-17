@@ -7,11 +7,11 @@ import {
   UseGuards,
   UsePipes,
 } from '@nestjs/common';
-import { LocalAuthGuard } from './local-auth.guard';
+import { LocalAuthGuard } from './guards/local-auth.guard';
 import { AuthService } from './auth.service';
-import { JwtAuthGuard } from './jwt-auth.guard';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { BuyProduct } from './schemas/buyproducts.schema';
-import { ValidationBuyProductPipe } from './validation-buyproduct.pipe';
+import { ValidationBuyProductPipe } from './pipes/validation-buyproduct.pipe';
 
 @Controller('auth')
 export class AuthController {

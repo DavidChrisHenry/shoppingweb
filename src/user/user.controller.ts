@@ -1,5 +1,5 @@
 import { Controller, Post, Body, UsePipes } from '@nestjs/common';
-import { ValidationPipe } from './validation.pipe';
+import { ValidationPipe } from './pipes/validation.pipe';
 
 import { UserService } from './user.service';
 import { User } from './schemas/user.schema';

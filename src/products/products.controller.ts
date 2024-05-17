@@ -12,9 +12,9 @@ import {
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { Product } from './schemas/product.schema';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { AdminGuard } from 'src/auth/admin.guard';
-import { ValidationProductPipe } from './validation-product.pipe';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { AdminGuard } from 'src/auth/guards/admin.guard';
+import { ValidationProductPipe } from './pipes/validation-product.pipe';
 
 @Controller('products')
 export class ProductsController {
