@@ -1,17 +1,7 @@
-import {
-  Headers,
-  Body,
-  Controller,
-  Post,
-  Request,
-  UseGuards,
-  UsePipes,
-} from '@nestjs/common';
+import { Controller, Post, Request, UseGuards } from '@nestjs/common';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
-import { BuyProduct } from './schemas/buyproducts.schema';
-import { ValidationBuyProductPipe } from './pipes/validation-buyproduct.pipe';
 
 @Controller('auth')
 export class AuthController {
@@ -26,15 +16,5 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   async logout(@Request() req) {
     return this.authService.logout(req);
-  }
-
-  @Post('buy-products')
-  @UseGuards(JwtAuthGuard)
-  @UsePipes(ValidationBuyProductPipe)
-  async handleBuyProduct(
-    @Body() buyProduct: BuyProduct,
-    @Headers('Authorization') authorizationHeader: string,
-  ) {
-    return this.authService.handleBuyProduct(buyProduct, authorizationHeader);
   }
 }

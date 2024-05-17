@@ -2,8 +2,11 @@ import { IsString } from 'class-validator';
 
 export class BuyProductDto {
   @IsString()
-  readonly username: string;
+  username: string;
 
   @IsString()
   readonly ProductId: string;
+
+  @IsString()
+  Quantity: string;
 }

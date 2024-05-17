@@ -4,6 +4,7 @@ import {
   Post,
   Put,
   Delete,
+  Headers,
   Body,
   Param,
   Query,
@@ -15,6 +16,8 @@ import { Product } from './schemas/product.schema';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { AdminGuard } from 'src/auth/guards/admin.guard';
 import { ValidationProductPipe } from './pipes/validation-product.pipe';
+import { ValidationBuyProductPipe } from './pipes/validation-buyproduct.pipe';
+import { BuyProductDto } from './dto/buy-product.dto';
 
 @Controller('products')
 export class ProductsController {
@@ -67,5 +70,22 @@ export class ProductsController {
   @UseGuards(JwtAuthGuard, AdminGuard)
   async delete(@Param('id') id: string): Promise<Product> {
     return this.productsService.delete(id);
+  }
+}
+
+@Controller('buy-products')
+export class BuyProductsController {
+  constructor(private readonly productsService: ProductsService) {}
+  @Post()
+  @UseGuards(JwtAuthGuard)
+  @UsePipes(ValidationBuyProductPipe)
+  async handleBuyProduct(
+    @Body() buyProduct: BuyProductDto,
+    @Headers('Authorization') authorizationHeader: string,
+  ) {
+    return this.productsService.handleBuyProduct(
+      buyProduct,
+      authorizationHeader,
+    );
   }
 }
