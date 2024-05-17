@@ -42,11 +42,24 @@ export class AuthService {
     return { message: 'Logged out successfully' };
   }
 
-  // xử lý mua hàng sau khi đăng nhập
-  async handleBuyProduct(token: string, buyProduct: BuyProduct) {
-    const decodedToken = this.jwtService.verify(token);
+  //giải mã lấy token của header
+  async extractToken(authorizationHeader: string): Promise<string> {
+    if (!authorizationHeader || !authorizationHeader.startsWith('Bearer ')) {
+      throw new Error('Invalid Authorization header');
+    }
+    return authorizationHeader.substring(7);
+  }
+
+  // lấy username từ token để xử lý mua hàng
+  async buyProduct(token: string, buyProduct: BuyProduct) {
+    const decodedToken = await this.jwtService.verify(token);
     buyProduct.username = decodedToken.username;
     const newPost = new this.BuyProductModel(buyProduct);
-    return await newPost.save();
+    return newPost.save();
+  }
+
+  async handleBuyProduct(buyProduct: BuyProduct, authorizationHeader: string) {
+    const access_token = await this.extractToken(authorizationHeader);
+    return this.buyProduct(access_token, buyProduct);
   }
 }

@@ -15,7 +15,7 @@ export class UserService {
     }
 
     const addUser = new this.UserModel(user);
-    return await addUser.save();
+    return addUser.save();
   }
 
   async isUsernameTaken(username: string): Promise<boolean> {

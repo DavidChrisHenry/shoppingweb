@@ -1,11 +1,4 @@
-import {
-  Controller,
-  Post,
-  Body,
-  HttpException,
-  HttpStatus,
-  UsePipes,
-} from '@nestjs/common';
+import { Controller, Post, Body, UsePipes } from '@nestjs/common';
 import { ValidationPipe } from './validation.pipe';
 
 import { UserService } from './user.service';
@@ -17,6 +10,6 @@ export class UserController {
   @Post('register')
   @UsePipes(new ValidationPipe())
   async register(@Body() user: User) {
-    return await this.userService.checkExistingUser(user);
+    return this.userService.checkExistingUser(user);
   }
 }

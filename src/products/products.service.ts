@@ -10,27 +10,27 @@ export class ProductsService {
   ) {}
 
   async findAll(): Promise<Product[]> {
-    return await this.ProductModel.find().exec();
+    return this.ProductModel.find().exec();
   }
 
   async findOne(id: string): Promise<Product> {
-    return await this.ProductModel.findById(id).exec();
+    return this.ProductModel.findById(id).exec();
   }
 
   async create(post: Product): Promise<Product> {
     const newPost = new this.ProductModel(post);
-    return await newPost.save();
+    return newPost.save();
   }
 
   async update(id: string, post: Product): Promise<Product> {
-    return await this.ProductModel.findByIdAndUpdate(id, post, { new: true });
+    return this.ProductModel.findByIdAndUpdate(id, post, { new: true });
   }
 
   async delete(id: string): Promise<Product> {
-    return await this.ProductModel.findByIdAndDelete(id);
+    return this.ProductModel.findByIdAndDelete(id);
   }
 
   async findProducts(filters: Record<string, any>): Promise<Product[]> {
-    return await this.ProductModel.find(filters).exec();
+    return this.ProductModel.find(filters).exec();
   }
 }
