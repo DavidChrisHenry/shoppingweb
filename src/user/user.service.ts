@@ -14,7 +14,7 @@ export class UserService {
     );
 
     if (isUsernameTaken) {
-      throw new HttpException('Người dùng đã tồn tại!', HttpStatus.CONFLICT);
+      throw new HttpException('User already exists!', HttpStatus.CONFLICT);
     }
 
     const addUser = new this.UserModel(registerUserDto);
@@ -31,7 +31,7 @@ export class UserService {
     if (!existingUser) {
       return this.createUser(registerUserDto);
     } else {
-      throw new HttpException('Người dùng đã tồn tại!', HttpStatus.CONFLICT);
+      throw new HttpException('User already exists!', HttpStatus.CONFLICT);
     }
   }
 

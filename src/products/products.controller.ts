@@ -18,6 +18,7 @@ import { AdminGuard } from 'src/auth/guards/admin.guard';
 import { ValidationProductPipe } from './pipes/validation-product.pipe';
 import { ValidationBuyProductPipe } from './pipes/validation-buyproduct.pipe';
 import { BuyProductDto } from './dto/buy-product.dto';
+import { QueryProductDto } from './dto/query-product.dto';
 
 @Controller('products')
 export class ProductsController {
@@ -26,22 +27,9 @@ export class ProductsController {
   @Get()
   @UseGuards(JwtAuthGuard)
   async findProducts(
-    @Query('minPrice') minPrice?: number,
-    @Query('maxPrice') maxPrice?: number,
-    @Query('country') country?: string,
-    @Query('Price') Price?: string,
-    @Query('ProductId') ProductId?: string,
-    @Query('name') name?: string,
+    @Query() queryProductDto: QueryProductDto,
   ): Promise<Product[]> {
-    const filters = {
-      minPrice,
-      maxPrice,
-      country,
-      Price,
-      ProductId,
-      name,
-    };
-    return this.productsService.findProducts(filters);
+    return this.productsService.findProducts(queryProductDto);
   }
 
   @Get(':id')

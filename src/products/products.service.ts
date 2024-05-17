@@ -7,6 +7,7 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { BuyProductDto } from './dto/buy-product.dto';
 import { JwtService } from '@nestjs/jwt';
 import { BuyProduct } from './schemas/buyproducts.schema';
+import { QueryProductDto } from './dto/query-product.dto';
 const dotenv = require('dotenv');
 dotenv.config();
 @Injectable()
@@ -44,7 +45,7 @@ export class ProductsService {
     return this.ProductModel.findByIdAndDelete(id);
   }
 
-  async findProducts(filters: Record<string, any>): Promise<Product[]> {
+  async findProducts(filters: QueryProductDto): Promise<Product[]> {
     const query: Record<string, any> = {};
 
     const { minPrice, maxPrice, country, Price, ProductId, name } = filters;
