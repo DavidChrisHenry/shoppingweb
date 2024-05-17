@@ -19,13 +19,13 @@ export class AuthController {
   @Post('login')
   @UseGuards(LocalAuthGuard)
   async login(@Request() req) {
-    return await this.authService.login(req.user, req);
+    return this.authService.login(req.user, req);
   }
 
   @Post('logout')
   @UseGuards(JwtAuthGuard)
   async logout(@Request() req) {
-    return await this.authService.logout(req);
+    return this.authService.logout(req);
   }
 
   @Post('buy-products')

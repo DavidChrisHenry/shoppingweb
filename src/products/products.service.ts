@@ -2,6 +2,8 @@ import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Product } from './schemas/product.schema';
 import { Model } from 'mongoose';
+import { CreateProductDto } from './dto/create-product.dto';
+import { UpdateProductDto } from './dto/update-product.dto';
 
 @Injectable()
 export class ProductsService {
@@ -17,13 +19,18 @@ export class ProductsService {
     return this.ProductModel.findById(id).exec();
   }
 
-  async create(post: Product): Promise<Product> {
-    const newPost = new this.ProductModel(post);
-    return newPost.save();
+  async create(createProductDto: CreateProductDto): Promise<Product> {
+    const newProduct = new this.ProductModel(createProductDto);
+    return newProduct.save();
   }
 
-  async update(id: string, post: Product): Promise<Product> {
-    return this.ProductModel.findByIdAndUpdate(id, post, { new: true });
+  async update(
+    id: string,
+    updateProductDto: UpdateProductDto,
+  ): Promise<Product> {
+    return this.ProductModel.findByIdAndUpdate(id, updateProductDto, {
+      new: true,
+    });
   }
 
   async delete(id: string): Promise<Product> {

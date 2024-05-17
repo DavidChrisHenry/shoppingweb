@@ -44,14 +44,14 @@ export class ProductsController {
   @Get(':id')
   @UseGuards(JwtAuthGuard)
   async findOne(@Param('id') id: string): Promise<Product> {
-    return await this.productsService.findOne(id);
+    return this.productsService.findOne(id);
   }
 
   @Post()
   @UsePipes(ValidationProductPipe)
   @UseGuards(JwtAuthGuard, AdminGuard)
   async create(@Body() product: Product): Promise<Product> {
-    return await this.productsService.create(product);
+    return this.productsService.create(product);
   }
 
   @Put(':id')
@@ -60,12 +60,12 @@ export class ProductsController {
     @Param('id') id: string,
     @Body() product: Product,
   ): Promise<Product> {
-    return await this.productsService.update(id, product);
+    return this.productsService.update(id, product);
   }
 
   @Delete(':id')
   @UseGuards(JwtAuthGuard, AdminGuard)
   async delete(@Param('id') id: string): Promise<Product> {
-    return await this.productsService.delete(id);
+    return this.productsService.delete(id);
   }
 }
