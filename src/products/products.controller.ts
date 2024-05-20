@@ -4,12 +4,12 @@ import {
   Post,
   Put,
   Delete,
-  Headers,
   Body,
   Param,
   Query,
   UseGuards,
   UsePipes,
+  Request,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { Product } from './schemas/product.schema';
@@ -59,21 +59,11 @@ export class ProductsController {
   async delete(@Param('id') id: string): Promise<Product> {
     return this.productsService.delete(id);
   }
-}
 
-@Controller('buy-products')
-export class BuyProductsController {
-  constructor(private readonly productsService: ProductsService) {}
-  @Post()
+  @Post('buy-product')
   @UseGuards(JwtAuthGuard)
   @UsePipes(ValidationBuyProductPipe)
-  async handleBuyProduct(
-    @Body() buyProduct: BuyProductDto,
-    @Headers('Authorization') authorizationHeader: string,
-  ) {
-    return this.productsService.handleBuyProduct(
-      buyProduct,
-      authorizationHeader,
-    );
+  async handleBuyProduct(@Body() buyProduct: BuyProductDto, @Request() req) {
+    return this.productsService.handleBuyProduct(buyProduct, req.user.username);
   }
 }

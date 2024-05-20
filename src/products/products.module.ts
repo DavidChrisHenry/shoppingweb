@@ -1,9 +1,6 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import {
-  ProductsController,
-  BuyProductsController,
-} from './products.controller';
+import { ProductsController } from './products.controller';
 import { ProductsService } from './products.service';
 import { ProductSchema } from './schemas/product.schema';
 import { BuyProductSchema } from './schemas/buyproducts.schema';
@@ -19,7 +16,7 @@ import { JwtService } from '@nestjs/jwt';
       { name: 'BuyProduct', schema: BuyProductSchema },
     ]),
   ],
-  controllers: [ProductsController, BuyProductsController],
+  controllers: [ProductsController],
   providers: [ProductsService, JwtService],
 })
 export class ProductsModule {}

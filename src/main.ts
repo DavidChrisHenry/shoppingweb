@@ -1,5 +1,6 @@
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, HttpAdapterHost } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { AllExceptionsFilter } from './http_exceptions/all-exceptions.filter';
 // import * as session from 'express-session';
 import * as express from 'express';
 const dotenv = require('dotenv');
@@ -17,6 +18,8 @@ async function bootstrap() {
   //     saveUninitialized: false,
   //   }),
   // );
+  const { httpAdapter } = app.get(HttpAdapterHost);
+  app.useGlobalFilters(new AllExceptionsFilter(httpAdapter));
 
   await app.listen(port);
 

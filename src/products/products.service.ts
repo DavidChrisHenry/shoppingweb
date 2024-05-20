@@ -5,18 +5,14 @@ import { Model } from 'mongoose';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { BuyProductDto } from './dto/buy-product.dto';
-import { JwtService } from '@nestjs/jwt';
 import { BuyProduct } from './schemas/buyproducts.schema';
 import { QueryProductDto } from './dto/query-product.dto';
-const dotenv = require('dotenv');
-dotenv.config();
 @Injectable()
 export class ProductsService {
   constructor(
     @InjectModel('Product') private readonly ProductModel: Model<Product>,
     @InjectModel('BuyProduct')
     private readonly BuyProductModel: Model<BuyProduct>,
-    private jwtService: JwtService,
   ) {}
 
   async findAll(): Promise<Product[]> {
@@ -85,30 +81,14 @@ export class ProductsService {
     return this.ProductModel.find(query).exec();
   }
 
-  //mua hang
-  //giải mã lấy token của header
-  async extractToken(authorizationHeader: string): Promise<string> {
-    if (!authorizationHeader || !authorizationHeader.startsWith('Bearer ')) {
-      throw new Error('Invalid Authorization header');
-    }
-    return authorizationHeader.substring(7);
-  }
-
   // lấy username từ token để xử lý mua hàng
-  async buyProduct(token: string, buyProduct: BuyProductDto) {
-    const decodedToken = await this.jwtService.verify(token, {
-      secret: process.env.jwtConstants,
-    });
-    buyProduct.username = decodedToken.username;
+  async buyProduct(username: string, buyProduct: BuyProductDto) {
+    buyProduct.username = username;
     const newBuyProduct = new this.BuyProductModel(buyProduct);
     return newBuyProduct.save();
   }
 
-  async handleBuyProduct(
-    buyProduct: BuyProductDto,
-    authorizationHeader: string,
-  ) {
-    const access_token = await this.extractToken(authorizationHeader);
-    return this.buyProduct(access_token, buyProduct);
+  async handleBuyProduct(buyProduct: BuyProductDto, username: string) {
+    return this.buyProduct(username, buyProduct);
   }
 }

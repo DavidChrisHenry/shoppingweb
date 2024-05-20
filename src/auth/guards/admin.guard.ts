@@ -1,7 +1,5 @@
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-const dotenv = require('dotenv');
-dotenv.config();
 
 @Injectable()
 export class AdminGuard implements CanActivate {
