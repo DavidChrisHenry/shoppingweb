@@ -2,12 +2,12 @@ import { IsString, MinLength, MaxLength, IsNumber, Min } from 'class-validator';
 
 export class ProductCheck {
   @IsString()
-  @MinLength(5)
+  @MinLength(3)
   @MaxLength(20)
   name: string;
 
   @IsString()
-  @MinLength(5)
+  @MinLength(3)
   @MaxLength(20)
   country: string;
 

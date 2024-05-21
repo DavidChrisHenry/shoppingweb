@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpStatus } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { LoginDto } from './dto/login.dto';
+import { CustomHttpException } from 'src/http_exceptions/custom-http-exception';
 
 @Injectable()
 export class AuthService {
@@ -28,13 +29,20 @@ export class AuthService {
     };
     const accessToken = this.jwtService.sign(payload);
     // req.session.userRole = user.role; // Lưu token vào session
-    return {
-      access_token: accessToken,
-    };
-  }
-
-  async logout(req: any) {
-    // delete req.session.access_token; // Xóa token khỏi session
-    return { message: 'Logged out successfully' };
+    if (accessToken) {
+      throw new CustomHttpException(
+        'Login Succeeded',
+        { accessToken },
+        true,
+        HttpStatus.OK, // (hoặc mã HTTP tùy chọn)
+      );
+    } else {
+      throw new CustomHttpException(
+        'Login Unsucceeded',
+        {},
+        true,
+        HttpStatus.CONFLICT, // (hoặc mã HTTP tùy chọn)
+      );
+    }
   }
 }

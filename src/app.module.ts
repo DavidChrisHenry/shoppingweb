@@ -7,17 +7,15 @@ import { QueryValidationMiddleware } from './middlewares/query-validation.middle
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { JwtService } from '@nestjs/jwt';
+
 @Module({
   imports: [
-    MongooseModule.forRoot(
-      'mongodb+srv://BSLapJIPgnU3ReR4:BSLapJIPgnU3ReR4@atlascluster.vjgfnz8.mongodb.net/',
-      {
-        dbName: 'shopping_website',
-      },
-    ),
+    MongooseModule.forRoot(process.env.MongoDB_HOST, {
+      dbName: process.env.MongoDB_NAME,
+    }),
+    AuthModule,
     ProductsModule,
     UserModule,
-    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService, JwtService],

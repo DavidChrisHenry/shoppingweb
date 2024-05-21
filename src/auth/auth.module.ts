@@ -7,6 +7,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { AuthController } from './auth.controller';
 import { ProductsModule } from 'src/products/products.module';
+const dotenv = require('dotenv');
+dotenv.config();
 
 @Module({
   imports: [

@@ -1,8 +1,9 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable, HttpStatus } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './schemas/user.schema';
 import { RegisterUserDto } from './dto/register-user.dto';
+import { CustomHttpException } from 'src/http_exceptions/custom-http-exception';
 
 @Injectable()
 export class UserService {
@@ -14,7 +15,12 @@ export class UserService {
     );
 
     if (isUsernameTaken) {
-      throw new HttpException('User already exists!', HttpStatus.CONFLICT);
+      throw new CustomHttpException(
+        'User already exists!',
+        'Additional data',
+        false,
+        HttpStatus.CONFLICT,
+      );
     }
 
     const addUser = new this.UserModel(registerUserDto);
@@ -29,9 +35,22 @@ export class UserService {
   async checkExistingUser(registerUserDto: RegisterUserDto): Promise<User> {
     const existingUser = await this.findUser(registerUserDto.username);
     if (!existingUser) {
-      return this.createUser(registerUserDto);
+      this.createUser(registerUserDto);
+
+      throw new CustomHttpException(
+        'Register Succeeded',
+        { user: registerUserDto },
+        true,
+        HttpStatus.OK, // (hoặc mã HTTP tùy chọn)
+      );
     } else {
-      throw new HttpException('User already exists!', HttpStatus.CONFLICT);
+      existingUser.password = undefined;
+      throw new CustomHttpException(
+        'User already exists!',
+        { existingUser },
+        false,
+        HttpStatus.CONFLICT,
+      );
     }
   }
 

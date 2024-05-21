@@ -1,9 +1,6 @@
-import {
-  Injectable,
-  NestMiddleware,
-  BadRequestException,
-} from '@nestjs/common';
+import { HttpStatus, Injectable, NestMiddleware } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
+import { CustomHttpException } from 'src/http_exceptions/custom-http-exception';
 
 @Injectable()
 export class QueryValidationMiddleware implements NestMiddleware {
@@ -25,8 +22,11 @@ export class QueryValidationMiddleware implements NestMiddleware {
     );
 
     if (invalidQueries.length > 0) {
-      throw new BadRequestException(
+      throw new CustomHttpException(
         `Invalid query parameters: ${invalidQueries.join(', ')}`,
+        {},
+        false,
+        HttpStatus.CONFLICT,
       );
     }
 

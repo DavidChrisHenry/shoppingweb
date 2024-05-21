@@ -42,6 +42,7 @@ export class ProductsController {
   @UsePipes(ValidationProductPipe)
   @UseGuards(JwtAuthGuard, AdminGuard)
   async create(@Body() product: Product): Promise<Product> {
+    console.log('aa');
     return this.productsService.create(product);
   }
 
@@ -60,7 +61,7 @@ export class ProductsController {
     return this.productsService.delete(id);
   }
 
-  @Post('buy-product')
+  @Post('orders')
   @UseGuards(JwtAuthGuard)
   @UsePipes(ValidationBuyProductPipe)
   async handleBuyProduct(@Body() buyProduct: BuyProductDto, @Request() req) {

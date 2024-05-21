@@ -12,9 +12,6 @@ import { JwtService } from '@nestjs/jwt';
     MongooseModule.forFeature([
       { name: 'BuyProduct', schema: BuyProductSchema },
     ]),
-    MongooseModule.forFeature([
-      { name: 'BuyProduct', schema: BuyProductSchema },
-    ]),
   ],
   controllers: [ProductsController],
   providers: [ProductsService, JwtService],

@@ -1,4 +1,4 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable, BadRequestException, HttpStatus } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Product } from './schemas/product.schema';
 import { Model } from 'mongoose';
@@ -7,6 +7,8 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { BuyProductDto } from './dto/buy-product.dto';
 import { BuyProduct } from './schemas/buyproducts.schema';
 import { QueryProductDto } from './dto/query-product.dto';
+import { CustomHttpException } from 'src/http_exceptions/custom-http-exception';
+import mongoose from 'mongoose';
 @Injectable()
 export class ProductsService {
   constructor(
@@ -15,30 +17,98 @@ export class ProductsService {
     private readonly BuyProductModel: Model<BuyProduct>,
   ) {}
 
-  async findAll(): Promise<Product[]> {
-    return this.ProductModel.find().exec();
-  }
-
   async findOne(id: string): Promise<Product> {
-    return this.ProductModel.findById(id).exec();
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      throw new CustomHttpException(
+        'Invalid product ID!',
+        { id },
+        false,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    const Product = await this.ProductModel.findById(id).exec();
+    if (Product) {
+      throw new CustomHttpException(
+        'Find Product by Id Succeded',
+        { Product },
+        true,
+        HttpStatus.OK, // (hoặc mã HTTP tùy chọn)
+      );
+    } else {
+      throw new CustomHttpException(
+        'Find Product by Id Unsucceded',
+        { Product },
+        false,
+        HttpStatus.CONFLICT, // (hoặc mã HTTP tùy chọn)
+      );
+    }
   }
 
   async create(createProductDto: CreateProductDto): Promise<Product> {
     const newProduct = new this.ProductModel(createProductDto);
-    return newProduct.save();
+    const addNewProduct = await newProduct.save();
+    if (addNewProduct) {
+      throw new CustomHttpException(
+        'Create new product Succeded',
+        { newProduct },
+        true,
+        HttpStatus.OK, // (hoặc mã HTTP tùy chọn)
+      );
+    } else {
+      throw new CustomHttpException(
+        'Create new product Fail',
+        { newProduct },
+        false,
+        HttpStatus.CONFLICT, // (hoặc mã HTTP tùy chọn)
+      );
+    }
   }
 
   async update(
     id: string,
     updateProductDto: UpdateProductDto,
   ): Promise<Product> {
-    return this.ProductModel.findByIdAndUpdate(id, updateProductDto, {
-      new: true,
-    });
+    const updateProduct = await this.ProductModel.findByIdAndUpdate(
+      id,
+      updateProductDto,
+      {
+        new: true,
+      },
+    );
+    if (updateProduct) {
+      throw new CustomHttpException(
+        'Update product Succeded',
+        { updateProduct },
+        true,
+        HttpStatus.OK, // (hoặc mã HTTP tùy chọn)
+      );
+    } else {
+      throw new CustomHttpException(
+        'Update product Unsucceded',
+        { updateProduct },
+        false,
+        HttpStatus.CONFLICT, // (hoặc mã HTTP tùy chọn)
+      );
+    }
   }
 
   async delete(id: string): Promise<Product> {
-    return this.ProductModel.findByIdAndDelete(id);
+    const deleteProduct = await this.ProductModel.findByIdAndDelete(id);
+    if (deleteProduct) {
+      throw new CustomHttpException(
+        'Delete product Succeded',
+        { deleteProduct },
+        true,
+        HttpStatus.OK, // (hoặc mã HTTP tùy chọn)
+      );
+    } else {
+      throw new CustomHttpException(
+        'Delete product Unsucceded because null of id product',
+        { deleteProduct },
+        false,
+        HttpStatus.CONFLICT, // (hoặc mã HTTP tùy chọn)
+      );
+    }
   }
 
   async findProducts(filters: QueryProductDto): Promise<Product[]> {
@@ -78,7 +148,22 @@ export class ProductsService {
       query.name = name;
     }
 
-    return this.ProductModel.find(query).exec();
+    const Products = await this.ProductModel.find(query).exec();
+    if (Products) {
+      throw new CustomHttpException(
+        'Find Product Succeded',
+        { Products },
+        true,
+        HttpStatus.OK, // (hoặc mã HTTP tùy chọn)
+      );
+    } else {
+      throw new CustomHttpException(
+        'Find Product Unsucceded',
+        { Products },
+        false,
+        HttpStatus.CONFLICT, // (hoặc mã HTTP tùy chọn)
+      );
+    }
   }
 
   // lấy username từ token để xử lý mua hàng
